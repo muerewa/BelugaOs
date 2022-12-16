@@ -45,9 +45,10 @@
 		// Now we have a C-worthy (haha!) environment ready to run the rest of our kernel.
 		// At this point, we can call our main C function.
 		call kernel_main
+		
+		cli      // Disable CPU interrupts
 
 		// If, by some mysterious circumstances, the kernel's C code ever returns, all we want to do is to hang the CPU
 		hang:
-			cli      // Disable CPU interrupts
 			hlt      // Halt the CPU
 			jmp hang // If that didn't work, loop around and try again.
