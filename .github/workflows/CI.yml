@@ -1,36 +1,37 @@
-# This is a basic workflow to help you get started with Actions
+# Автоматическая сборка 
 
 name: CI
 
-# Controls when the workflow will run
+# Автосборка будет работать при отправке commit или pull request на всех ветках
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "*" ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Разрешаем запуск вручную нажатием на кнопку в Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Выполнение рабочего процесса состоит из одного или нескольких заданий, которые могут выполняться последовательно или параллельно
 jobs:
-  # This workflow contains a single job called "build"
+  # Задание сборки
   build:
-    # The type of runner that the job will run on
+    # Сборка будет на последней доступной версии Ubuntu
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Шаги представляют собой последовательность задач, которые будут выполняться как часть задания
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # Установка зависимостей
+      - name: Установка зависимостей
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          sudo apt install python3 build-essential xorriso grub-pc-bin mtools zip doxygen
+          wget -nv https://github.com/lordmilko/i686-elf-tools/releases/download/7.1.0/i686-elf-tools-linux.zip
+          sudo unzip i686-elf-tools-linux.zip -d /usr/local
+          rm i686-elf-tools-linux.zip
+
+      # Запуск сборки
+      - name: Сборка ядра
+        run: |
+          python scripts/build.py
