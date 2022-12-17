@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from sys import platform
 import os
 
 
@@ -20,5 +21,16 @@ if __name__ == '__main__':
     os.system("i686-elf-strip  -s -K mmio -K fb -K bootboot -K environment -K initstack isodir/kernel.elf")
     os.system("i686-elf-readelf -hls isodir/kernel.elf>kernel.elf.txt")
 
-    os.system("grub-mkrescue isodir -o BelugaOS.iso")
+    #os.system("grub-mkrescue isodir -o BelugaOS.iso")
     
+    LIMINE_XORRISO = "-b limine-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-cd-efi.bin -efi-boot-part --efi-boot-image "
+    os.system(f"xorriso -as mkisofs {LIMINE_XORRISO} --protective-msdos-label isodir -o BelugaOS-limine.iso")
+
+
+    if platform == "linux" or platform == "linux2":
+        os.system("./limine/limine-deploy BelugaOS-limine.iso")
+    elif platform == "win32":
+        os.system("cd limine/ && limine-deploy.exe ../BelugaOS-limine.iso && cd ..")
+
+    
+    #qemu-system-i386 -cdrom belugaos.iso -nographic
