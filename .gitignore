@@ -4,3 +4,7 @@
 *.o
 *.elf
 kernel.elf.txt
+limine/
+isodir/limine.sys
+isodir/limine-cd-efi.bin
+isodir/limine-cd.bin
