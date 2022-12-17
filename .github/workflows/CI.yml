@@ -35,3 +35,14 @@ jobs:
       - name: Сборка ядра
         run: |
           python scripts/build.py
+
+      # Создание дистрибутива (ISO)
+      - name: Создание дистрибутива (ISO) limine
+        run: |
+          git clone https://github.com/limine-bootloader/limine.git --branch=v3.0-branch-binary --depth=1
+          make -C limine
+          cp limine/limine-cd.bin isodir/
+          cp limine/limine-cd-efi.bin isodir/
+          cp limine/limine.sys isodir/
+          xorriso -as mkisofs -b limine-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-cd-efi.bin -efi-boot-part --efi-boot-image --protective-msdos-label isodir -o BelugaOS-limine.iso
+          ./limine/limine-deploy BelugaOS-limine.iso
