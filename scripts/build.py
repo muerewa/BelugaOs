@@ -12,6 +12,7 @@ if __name__ == '__main__':
     os.system("mount -t ext2 /dev/loop0 /mnt/beluga_os_floppy")
     os.system("mkdir /mnt/beluga_os_floppy/grub")
     '''
+    os.system("mkdir bin/")
     
     os.system("i686-elf-gcc -finput-charset=UTF-8 -fextended-identifiers -ffreestanding  -march=i486 -ggdb -Wall -Wextra -O0 -g -I include// -c kernel.c -o bin/kernel.o")
     os.system("i686-elf-gcc -finput-charset=UTF-8 -fextended-identifiers -ffreestanding  -march=i486 -ggdb -Wall -Wextra -O0 -g -I include// -c start.s -o bin/start.o")
@@ -19,5 +20,5 @@ if __name__ == '__main__':
     os.system("i686-elf-strip  -s -K mmio -K fb -K bootboot -K environment -K initstack isodir/kernel.elf")
     os.system("i686-elf-readelf -hls isodir/kernel.elf>kernel.elf.txt")
 
-    os.system("wsl grub-mkrescue isodir -o BelugaOS.iso")
+    os.system("grub-mkrescue isodir -o BelugaOS.iso")
     
